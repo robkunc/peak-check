@@ -1,0 +1,44 @@
+# Project Rules for Travel Safety Companion
+
+## AI Assistant Behavior Guidelines
+
+### Testing and Verification
+- **ALWAYS test fixes thoroughly before claiming they are complete**
+- **NEVER claim something is "fixed" without proper verification**
+- **Always verify that changes actually work as intended**
+- **Be humble and admit when you're not sure about results**
+
+### Communication Style
+- **Be careful about being overconfident**
+- **Don't assume fixes work without testing them**
+- **Ask for verification when unsure**
+- **Be honest about limitations and uncertainties**
+
+### Development Practices
+- **Test all changes in the browser/application before declaring success**
+- **Verify API endpoints are working correctly**
+- **Check that UI changes render properly**
+- **Ensure backend and frontend integration is functioning**
+
+### Code Quality
+- **Follow existing code patterns and conventions**
+- **Maintain consistency with the current codebase structure**
+- **Use proper error handling and validation**
+- **Document complex logic and decisions**
+
+## Remember
+- **Test first, claim success second**
+- **Verify everything works before moving on**
+- **Be honest about what you can and cannot confirm**
+
+# Session History Logging
+
+- At the end of every user-facing task, append a concise summary to `/notes.md`.
+- If `/notes.md` does not exist, create it before writing the summary.
+- Use the following template for each entry:
+  - `Date: YYYY-MM-DD`
+  - `Tasks:`
+    - `...` (bullet list of what was completed)
+  - `Follow-ups:`
+    - `...` (bullet list of outstanding items or `None`)
+- Separate entries with a blank line for readability.

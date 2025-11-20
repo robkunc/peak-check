@@ -1,0 +1,179 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String   @id @default(uuid())
+  name           String?
+  email          String   @unique
+  emailVerified  DateTime?
+  image          String?
+  role           Role     @default(LEADER)
+  externalAuthId String?  @map("external_auth_id")
+  createdAt      DateTime @default(now()) @map("created_at")
+  
+  // Relations
+  manualNotes    ManualNote[]
+  accounts       Account[]
+  sessions       Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(uuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique @map("session_token")
+  userId       String   @map("user_id")
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+enum Role {
+  LEADER
+  ADMIN
+}
+
+model Peak {
+  id        String   @id @default(uuid())
+  name      String
+  slug      String   @unique
+  region    String?
+  gpsLat    Float?   @map("gps_lat")
+  gpsLng    Float?   @map("gps_lng")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  // Relations
+  sources              PeakSource[]
+  weatherSnapshots     WeatherSnapshot[]
+  landStatusSnapshots  LandStatusSnapshot[]
+  roadStatusSnapshots  RoadStatusSnapshot[]
+  manualNotes          ManualNote[]
+
+  @@map("peaks")
+}
+
+model PeakSource {
+  id         String     @id @default(uuid())
+  peakId     String     @map("peak_id")
+  sourceType SourceType @map("source_type")
+  label      String
+  url        String
+  createdAt  DateTime   @default(now()) @map("created_at")
+  updatedAt  DateTime   @updatedAt @map("updated_at")
+
+  // Relations
+  peak                Peak                  @relation(fields: [peakId], references: [id], onDelete: Cascade)
+  landStatusSnapshots LandStatusSnapshot[]
+  roadStatusSnapshots RoadStatusSnapshot[]
+
+  @@map("peak_sources")
+}
+
+enum SourceType {
+  LAND_MANAGER
+  ROAD_STATUS
+  TRAIL_INFO
+}
+
+model WeatherSnapshot {
+  id          String   @id @default(uuid())
+  peakId      String   @map("peak_id")
+  source      String   @default("NOAA")
+  rawJson     Json?    @map("raw_json")
+  summaryText String?  @map("summary_text")
+  fetchedAt   DateTime @map("fetched_at")
+
+  // Relations
+  peak Peak @relation(fields: [peakId], references: [id], onDelete: Cascade)
+
+  @@map("weather_snapshots")
+}
+
+model LandStatusSnapshot {
+  id            String   @id @default(uuid())
+  peakId        String   @map("peak_id")
+  peakSourceId  String   @map("peak_source_id")
+  rawText       String?  @map("raw_text")
+  statusSummary String?  @map("status_summary")
+  statusCode    String?  @map("status_code")
+  fetchedAt     DateTime @map("fetched_at")
+
+  // Relations
+  peak       Peak       @relation(fields: [peakId], references: [id], onDelete: Cascade)
+  peakSource PeakSource @relation(fields: [peakSourceId], references: [id], onDelete: Cascade)
+
+  @@map("land_status_snapshots")
+}
+
+model RoadStatusSnapshot {
+  id            String   @id @default(uuid())
+  peakId        String   @map("peak_id")
+  peakSourceId  String   @map("peak_source_id")
+  rawText       String?  @map("raw_text")
+  statusSummary String?  @map("status_summary")
+  statusCode    String?  @map("status_code")
+  fetchedAt     DateTime @map("fetched_at")
+
+  // Relations
+  peak       Peak       @relation(fields: [peakId], references: [id], onDelete: Cascade)
+  peakSource PeakSource @relation(fields: [peakSourceId], references: [id], onDelete: Cascade)
+
+  @@map("road_status_snapshots")
+}
+
+model ManualNote {
+  id        String   @id @default(uuid())
+  peakId    String   @map("peak_id")
+  userId    String   @map("user_id")
+  text      String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  peak Peak @relation(fields: [peakId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("manual_notes")
+}
+
+
