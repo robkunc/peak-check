@@ -1,13 +1,16 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
 
-export default function AddNoteForm({ peakId }: { peakId: string }) {
+interface AddNoteFormProps {
+  peakId: string
+  onNoteCreated?: () => void
+}
+
+export default function AddNoteForm({ peakId, onNoteCreated }: AddNoteFormProps) {
   const [text, setText] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,7 +31,12 @@ export default function AddNoteForm({ peakId }: { peakId: string }) {
       }
 
       setText('')
-      router.refresh()
+      if (onNoteCreated) {
+        onNoteCreated()
+      } else {
+        // Fallback: reload page if no callback provided
+        window.location.reload()
+      }
     } catch (err) {
       setError('Failed to add note. Please try again.')
     } finally {
@@ -47,7 +55,7 @@ export default function AddNoteForm({ peakId }: { peakId: string }) {
         onChange={(e) => setText(e.target.value)}
         required
         rows={4}
-        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg"
+        className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg text-gray-900 bg-white"
         placeholder="Share recent trip conditions, trail status, or other observations..."
       />
       {error && <p className="text-red-600 text-sm mt-2">{error}</p>}

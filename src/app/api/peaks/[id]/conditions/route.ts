@@ -27,6 +27,7 @@ export async function GET(
       select: {
         summaryText: true,
         fetchedAt: true,
+        rawJson: true,
       },
     })
 
@@ -38,6 +39,7 @@ export async function GET(
         peakSource: {
           select: {
             label: true,
+            url: true,
           },
         },
       },
@@ -49,7 +51,9 @@ export async function GET(
         landStatusSnapshots.map((s) => [
           s.peakSourceId,
           {
+            id: s.id,
             label: s.peakSource.label,
+            url: s.peakSource.url,
             statusSummary: s.statusSummary,
             statusCode: s.statusCode,
             fetchedAt: s.fetchedAt,
@@ -66,6 +70,7 @@ export async function GET(
         peakSource: {
           select: {
             label: true,
+            url: true,
           },
         },
       },
@@ -77,7 +82,9 @@ export async function GET(
         roadStatusSnapshots.map((s) => [
           s.peakSourceId,
           {
+            id: s.id,
             label: s.peakSource.label,
+            url: s.peakSource.url,
             statusSummary: s.statusSummary,
             statusCode: s.statusCode,
             fetchedAt: s.fetchedAt,

@@ -13,7 +13,9 @@
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.11.1",
+    "@mendable/firecrawl-js": "^4.6.1",
     "@prisma/client": "^5.22.0",
+    "dotenv": "^17.2.3",
     "next": "^15.0.3",
     "next-auth": "^4.24.10",
     "nodemailer": "^7.0.10",

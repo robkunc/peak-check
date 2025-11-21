@@ -57,7 +57,10 @@ export const authOptions: NextAuthOptions = {
   },
   session: {
     strategy: 'database',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
+  // Ensure cookies work in incognito/private browsing
+  useSecureCookies: process.env.NODE_ENV === 'production',
 }
 
 

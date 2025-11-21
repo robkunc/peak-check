@@ -3,6 +3,10 @@ import { getCurrentUser } from '@/lib/auth-utils'
 import Link from 'next/link'
 import { prisma } from '@/lib/prisma'
 
+// Force dynamic rendering to prevent caching
+export const dynamic = 'force-dynamic'
+export const revalidate = 0
+
 export default async function PeaksPage() {
   const user = await getCurrentUser()
   

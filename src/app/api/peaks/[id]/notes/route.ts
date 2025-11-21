@@ -3,7 +3,7 @@ import { prisma } from '@/lib/prisma'
 import { requireAuth } from '@/lib/auth-utils'
 import { z } from 'zod'
 
-// GET /api/peaks/[id]/notes - Get notes for a peak
+// GET /api/peaks/[id]/notes - Get notes for a peak (paginated)
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
@@ -12,20 +12,40 @@ export async function GET(
     await requireAuth()
     const { id } = await params
 
-    const notes = await prisma.manualNote.findMany({
-      where: { peakId: id },
-      orderBy: { createdAt: 'desc' },
-      include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
+    const searchParams = request.nextUrl.searchParams
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '20')
+    const skip = (page - 1) * limit
+
+    const [notes, total] = await Promise.all([
+      prisma.manualNote.findMany({
+        where: { peakId: id },
+        orderBy: { createdAt: 'desc' },
+        skip,
+        take: limit,
+        include: {
+          user: {
+            select: {
+              name: true,
+              email: true,
+            },
           },
         },
+      }),
+      prisma.manualNote.count({
+        where: { peakId: id },
+      }),
+    ])
+
+    return NextResponse.json({
+      notes,
+      pagination: {
+        page,
+        limit,
+        total,
+        totalPages: Math.ceil(total / limit),
       },
     })
-
-    return NextResponse.json({ notes })
   } catch (error) {
     if (error instanceof Error && error.message === 'Unauthorized') {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })

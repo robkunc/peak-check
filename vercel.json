@@ -12,6 +12,17 @@
       "path": "/api/jobs/refresh-road-status",
       "schedule": "0 */3 * * *"
     }
+  ],
+  "headers": [
+    {
+      "source": "/api/jobs/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
   ]
 }
 

@@ -4,7 +4,7 @@ An internal web application for Sierra Club outing leaders in Southern Californi
 
 ## 🎯 Project Status
 
-**Phase 1 Complete** ✅
+**Phases 1-5 Complete** ✅
 
 This project is being built in phases according to the detailed specification in `sierra-conditions-spec.md`.
 
@@ -16,17 +16,19 @@ This project is being built in phases according to the detailed specification in
 - ✅ Role-based access control (Leader/Admin)
 - ✅ Complete API routes for peaks, conditions, notes, and sources
 - ✅ Peaks list page with region grouping
-- ✅ Individual peak conditions pages
-- ✅ Manual notes system for leaders to share observations
-- ✅ Basic admin dashboard structure
+- ✅ Individual peak conditions pages with weather, land status, road status, and notes
+- ✅ Manual notes system with pagination, edit, and delete
+- ✅ NOAA weather integration with automatic station selection
+- ✅ Firecrawl integration for scraping land manager and road status pages
+- ✅ Full admin interface for managing peaks and data sources
+- ✅ Background jobs for refreshing weather, land status, and road status data
+- ✅ Manual refresh triggers in admin interface
 
 ### Coming Next
 
-- 🚧 Phase 2: Enhanced manual notes UI
-- 🚧 Phase 3: NOAA weather integration
-- 🚧 Phase 4: Firecrawl integration for web scraping (land manager & road status)
-- 🚧 Phase 5: Full admin interface for managing peaks and sources
-- 🚧 Phase 6: Optional enhancements (notifications, hints, etc.)
+- 🚧 Phase 6: Optional enhancements (rule-based hints, notifications, etc.)
+- 🚧 Set up automated cron jobs for data refresh
+- 🚧 Production deployment and testing
 
 ## 🚀 Quick Start
 
@@ -60,6 +62,7 @@ Visit `http://localhost:3000` and sign in to get started!
 ## 📚 Documentation
 
 - **[SETUP.md](./SETUP.md)** - Complete setup and deployment guide
+- **[IMPORT-GUIDE.md](./IMPORT-GUIDE.md)** - Guide for importing peaks and configuring data sources
 - **[sierra-conditions-spec.md](./sierra-conditions-spec.md)** - Full technical specification and architecture
 
 ## 🏗️ Tech Stack
