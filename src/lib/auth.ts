@@ -38,40 +38,33 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      // PrismaAdapter handles user creation, but we ensure it exists as a fallback
-      // This is especially important for email provider
-      if (user.email && account?.provider === 'email') {
-        try {
-          const existingUser = await prisma.user.findUnique({
-            where: { email: user.email },
-          })
-          if (!existingUser) {
-            // Adapter should create this, but if it doesn't, we will
-            await prisma.user.create({
-              data: {
-                email: user.email,
-                name: user.name,
-                image: user.image,
-                emailVerified: new Date(),
-              },
-            })
-          }
-        } catch (error) {
-          // If user already exists (race condition), that's fine
-          console.error('Error in signIn callback:', error)
-        }
-      }
+      // PrismaAdapter handles user creation automatically
+      // Just log for debugging
+      console.log('[NextAuth signIn]', { 
+        email: user.email, 
+        provider: account?.provider,
+        hasAccount: !!account 
+      })
       return true
     },
     async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
-        // Fetch user role from database
-        const dbUser = await prisma.user.findUnique({
-          where: { id: user.id },
-          select: { role: true },
-        })
-        session.user.role = dbUser?.role || 'LEADER'
+      try {
+        if (session.user) {
+          session.user.id = user.id
+          // Fetch user role from database
+          const dbUser = await prisma.user.findUnique({
+            where: { id: user.id },
+            select: { role: true },
+          })
+          session.user.role = dbUser?.role || 'LEADER'
+          console.log('[NextAuth session]', { userId: user.id, role: session.user.role })
+        }
+      } catch (error) {
+        console.error('[NextAuth session error]', error)
+        // Don't fail the session, just use default role
+        if (session.user) {
+          session.user.role = 'LEADER'
+        }
       }
       return session
     },
