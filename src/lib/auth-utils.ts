@@ -18,13 +18,13 @@ export async function requireAuth() {
 export async function requireAdmin() {
   const user = await requireAuth()
   if (user.role !== Role.ADMIN) {
-    throw new Error('Forbidden: Admin access required')
+    throw new Error('Unauthorized')
   }
   return user
 }
 
-export function isAdmin(role: Role) {
-  return role === Role.ADMIN
+export function isAdmin(user: { role?: string | null } | null): boolean {
+  return user?.role === 'ADMIN'
 }
 
 

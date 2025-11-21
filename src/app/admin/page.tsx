@@ -57,14 +57,17 @@ export default async function AdminPage() {
             </p>
           </div>
 
-          <div className="bg-gray-100 rounded-lg shadow p-6 opacity-50">
-            <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+          <Link
+            href="/admin/users"
+            className="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow"
+          >
+            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
               User Management
             </h2>
-            <p className="text-gray-500">
-              Manage user roles and permissions (future enhancement)
+            <p className="text-gray-600">
+              Add and manage users who can access the peak conditions system.
             </p>
-          </div>
+          </Link>
 
           <div className="bg-gray-100 rounded-lg shadow p-6 opacity-50">
             <h2 className="text-2xl font-semibold text-gray-700 mb-2">
