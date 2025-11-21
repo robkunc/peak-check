@@ -76,16 +76,24 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
+      // Log for debugging
+      console.log('[NextAuth Redirect]', { url, baseUrl })
+      
       // If url is a relative path, make it absolute
       if (url.startsWith('/')) {
-        return `${baseUrl}${url}`
+        const redirectUrl = `${baseUrl}${url}`
+        console.log('[NextAuth Redirect] Returning:', redirectUrl)
+        return redirectUrl
       }
       // If url is from the same origin, use it
       if (url.startsWith(baseUrl)) {
+        console.log('[NextAuth Redirect] Returning:', url)
         return url
       }
       // Default to /peaks if no valid callback URL
-      return `${baseUrl}/peaks`
+      const defaultUrl = `${baseUrl}/peaks`
+      console.log('[NextAuth Redirect] Returning default:', defaultUrl)
+      return defaultUrl
     },
   },
   pages: {
