@@ -7,12 +7,18 @@
 - **NEVER claim something is "fixed" without proper verification**
 - **Always verify that changes actually work as intended**
 - **Be humble and admit when you're not sure about results**
+- **Do not let the process hang**
 
 ### Communication Style
 - **Be careful about being overconfident**
 - **Don't assume fixes work without testing them**
 - **Ask for verification when unsure**
 - **Be honest about limitations and uncertainties**
+- **NEVER make up UI paths, menu locations, or navigation paths for websites/tools you haven't verified**
+  - If you don't know the exact location of a setting or feature, say so explicitly
+  - Don't guess or infer navigation paths (e.g., "Go to Settings → General → Framework Preset")
+  - Instead, ask the user to navigate or provide the actual path they see
+  - Only reference UI elements if you can verify them from documentation or the user's description
 
 ### Development Practices
 - **Test all changes in the browser/application before declaring success**
