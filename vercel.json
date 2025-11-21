@@ -1,18 +1,4 @@
 {
-  "crons": [
-    {
-      "path": "/api/jobs/refresh-weather",
-      "schedule": "0 */3 * * *"
-    },
-    {
-      "path": "/api/jobs/refresh-land-status",
-      "schedule": "0 */6 * * *"
-    },
-    {
-      "path": "/api/jobs/refresh-road-status",
-      "schedule": "0 */3 * * *"
-    }
-  ],
   "headers": [
     {
       "source": "/api/jobs/(.*)",
