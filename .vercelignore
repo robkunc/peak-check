@@ -1,4 +1,5 @@
 # Ignore files that shouldn't be deployed to Vercel
+# Note: Don't ignore source files - Vercel needs them to build
 node_modules
 .next
 .env
@@ -7,7 +8,8 @@ node_modules
 *.log
 .DS_Store
 prisma/migrations
-scripts
+# Keep scripts directory - some might be needed at runtime
+# scripts
 *.md
 !README.md
 

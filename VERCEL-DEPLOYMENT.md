@@ -25,7 +25,23 @@ git push -u origin main
 3. Import your GitHub repository
 4. Vercel will auto-detect Next.js
 
-## Step 3: Configure Environment Variables
+## Step 3: Verify Build Settings
+
+In Vercel project settings → General → Build & Development Settings:
+
+- **Framework Preset**: Should be "Next.js" (auto-detected)
+- **Build Command**: `npm run build` (or leave empty for auto-detection)
+- **Output Directory**: Leave empty (Next.js handles this)
+- **Install Command**: `npm install` (or leave empty for auto-detection)
+- **Root Directory**: Leave empty (unless your Next.js app is in a subdirectory)
+
+If Vercel shows a 404 or build completes in <1 second, it might not be detecting Next.js correctly. Check:
+1. `package.json` exists in root
+2. `next` is in dependencies
+3. `src/app` directory structure exists
+4. `vercel.json` doesn't override framework detection incorrectly
+
+## Step 4: Configure Environment Variables
 
 In the Vercel project settings, add these environment variables:
 
@@ -76,14 +92,27 @@ openssl rand -base64 32
    - Neon
 
 2. **Run Prisma migrations:**
+   
+   **For Supabase (recommended approach):**
    ```bash
-   # Locally, with production DATABASE_URL
-   DATABASE_URL="your-production-database-url" npx prisma db push
+   # Make sure your Supabase connection string includes SSL
+   # Format: postgresql://user:password@host:5432/database?sslmode=require
+   
+   # Option 1: Use the setup script
+   DATABASE_URL="your-supabase-connection-string" npx ts-node --compiler-options '{"module":"CommonJS"}' scripts/setup-production-db.ts
+   
+   # Option 2: Direct prisma db push (if script doesn't work)
+   DATABASE_URL="your-supabase-connection-string" npx prisma db push
    ```
-
-   Or use Vercel's built-in database:
+   
+   **Important for Supabase:**
+   - Your connection string MUST include `?sslmode=require` at the end
+   - Get your connection string from Supabase Dashboard → Project Settings → Database → Connection string
+   - Use the "URI" format, not the individual parameters
+   
+   **For Vercel Postgres:**
    - Vercel will automatically run `prisma generate` during build
-   - You'll need to run `prisma db push` manually the first time
+   - You'll need to run `prisma db push` manually the first time with the production DATABASE_URL
 
 3. **Create your first admin user:**
    - Visit your deployed app: `https://your-app.vercel.app/auth/signin`
@@ -113,7 +142,40 @@ openssl rand -base64 32
 
 If you're getting 404 errors on Vercel:
 
-### 1. Check Build Logs
+### 1. Build Completing Too Quickly (<1 second)
+
+**Symptom**: Build logs show "Build Completed in /vercel/output [18ms]" or similar very fast times, then 404 errors.
+
+**Causes**:
+- Vercel not detecting Next.js framework
+- Build command not running
+- Project structure not recognized
+
+**Solutions**:
+1. **Check Framework Detection**:
+   - Go to Vercel Dashboard → Project Settings → General
+   - Under "Framework Preset", ensure it shows "Next.js"
+   - If it shows "Other" or nothing, manually set it to "Next.js"
+
+2. **Verify Build Command**:
+   - In Project Settings → General → Build & Development Settings
+   - Build Command should be: `npm run build` (or leave empty for auto)
+   - Output Directory should be empty (Next.js handles this)
+
+3. **Check Project Structure**:
+   - Ensure `package.json` is in the root directory
+   - Ensure `src/app` directory exists with `layout.tsx` and `page.tsx`
+   - Ensure `next.config.js` exists in root
+
+4. **Force Rebuild**:
+   - Go to Deployments → Click "..." on latest deployment → "Redeploy"
+   - Or push a new commit to trigger a fresh build
+
+5. **Check vercel.json**:
+   - Ensure `vercel.json` doesn't have conflicting settings
+   - The updated `vercel.json` should have `"framework": "nextjs"` and `"buildCommand": "npm run build"`
+
+### 2. Check Build Logs
 - Go to your Vercel project → Deployments → Click on the latest deployment
 - Check the build logs for errors
 - Common issues:
