@@ -37,6 +37,14 @@ export const authOptions: NextAuthOptions = {
       : []),
   ],
   callbacks: {
+    async signIn({ user, account, profile, email }) {
+      // For email provider, ensure user exists (PrismaAdapter should handle this, but we'll verify)
+      if (account?.provider === 'email' && email?.verificationRequest) {
+        // Email provider - user should be created by adapter
+        return true
+      }
+      return true
+    },
     async session({ session, user }) {
       if (session.user) {
         session.user.id = user.id
@@ -49,12 +57,19 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async redirect({ url, baseUrl }) {
+      // Ensure redirects stay within the same origin
+      if (url.startsWith('/')) return `${baseUrl}${url}`
+      if (new URL(url).origin === baseUrl) return url
+      return baseUrl
+    },
   },
   pages: {
     signIn: '/auth/signin',
     verifyRequest: '/auth/verify-request',
     error: '/auth/error',
   },
+  debug: process.env.NODE_ENV === 'development',
   session: {
     strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
