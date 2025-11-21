@@ -37,11 +37,29 @@ export const authOptions: NextAuthOptions = {
       : []),
   ],
   callbacks: {
-    async signIn({ user, account, profile, email }) {
-      // For email provider, ensure user exists (PrismaAdapter should handle this, but we'll verify)
-      if (account?.provider === 'email' && email?.verificationRequest) {
-        // Email provider - user should be created by adapter
-        return true
+    async signIn({ user, account, profile, email, credentials }) {
+      // PrismaAdapter handles user creation, but we ensure it exists as a fallback
+      // This is especially important for email provider
+      if (user.email && account?.provider === 'email') {
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email },
+          })
+          if (!existingUser) {
+            // Adapter should create this, but if it doesn't, we will
+            await prisma.user.create({
+              data: {
+                email: user.email,
+                name: user.name,
+                image: user.image,
+                emailVerified: new Date(),
+              },
+            })
+          }
+        } catch (error) {
+          // If user already exists (race condition), that's fine
+          console.error('Error in signIn callback:', error)
+        }
       }
       return true
     },
@@ -58,10 +76,16 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Ensure redirects stay within the same origin
-      if (url.startsWith('/')) return `${baseUrl}${url}`
-      if (new URL(url).origin === baseUrl) return url
-      return baseUrl
+      // If url is a relative path, make it absolute
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      // If url is from the same origin, use it
+      if (url.startsWith(baseUrl)) {
+        return url
+      }
+      // Default to /peaks if no valid callback URL
+      return `${baseUrl}/peaks`
     },
   },
   pages: {
@@ -69,7 +93,7 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: '/auth/verify-request',
     error: '/auth/error',
   },
-  debug: process.env.NODE_ENV === 'development',
+  debug: true, // Enable debug logging to troubleshoot magic link issues
   session: {
     strategy: 'database',
     maxAge: 30 * 24 * 60 * 60, // 30 days
