@@ -17,19 +17,22 @@ export interface ParsedStatus {
 export function inferStatusFromText(rawText: string): ParsedStatus {
   const text = rawText.toLowerCase()
 
-  // Check for closed/closure keywords - be specific to avoid false positives
-  // "Full Closure" or "Road Closed" means closed, but "Lane Closure" or "Construction" doesn't
+  // Check for restricted access FIRST (before closed) since it's more specific
+  // Construction, accidents, incidents, lane closures = restricted (not closed)
   if (
-    text.includes('road closed') ||
-    text.includes('fully closed') ||
-    text.includes('temporarily closed') ||
-    text.includes('permanently closed') ||
-    text.includes('full closure') ||
-    (text.includes('closed') && !text.includes('lane closure') && !text.includes('construction'))
+    text.includes('restricted') ||
+    text.includes('limited access') ||
+    text.includes('permit required') ||
+    text.includes('special restrictions') ||
+    text.includes('lane closure') ||
+    text.includes('construction') ||
+    text.includes('accident') ||
+    text.includes('incident') ||
+    text.includes('delay')
   ) {
     return {
-      statusCode: 'closed',
-      summary: 'Road closed (see source for details).',
+      statusCode: 'restricted',
+      summary: 'Road conditions may affect access (see source for details).',
     }
   }
 
@@ -46,22 +49,23 @@ export function inferStatusFromText(rawText: string): ParsedStatus {
     }
   }
 
-  // Check for restricted access or conditions that may cause delays
-  // Construction, accidents, incidents, lane closures = restricted (not closed)
+  // Check for closed/closure keywords - be specific to avoid false positives
+  // "Full Closure" or "Road Closed" means closed, but "Lane Closure" or "Construction" doesn't
+  // Also exclude "restricted" since we already checked for that above
   if (
-    text.includes('restricted') ||
-    text.includes('limited access') ||
-    text.includes('permit required') ||
-    text.includes('special restrictions') ||
-    text.includes('lane closure') ||
-    text.includes('construction') ||
-    text.includes('accident') ||
-    text.includes('incident') ||
-    text.includes('delay')
+    text.includes('road closed') ||
+    text.includes('fully closed') ||
+    text.includes('temporarily closed') ||
+    text.includes('permanently closed') ||
+    text.includes('full closure') ||
+    (text.includes('closed') && 
+     !text.includes('lane closure') && 
+     !text.includes('construction') &&
+     !text.includes('restricted'))
   ) {
     return {
-      statusCode: 'restricted',
-      summary: 'Road conditions may affect access (see source for details).',
+      statusCode: 'closed',
+      summary: 'Road closed (see source for details).',
     }
   }
 
