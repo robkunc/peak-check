@@ -38,14 +38,28 @@ export const authOptions: NextAuthOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      // PrismaAdapter handles user creation automatically
-      // Just log for debugging
-      console.log('[NextAuth signIn]', { 
-        email: user.email, 
-        provider: account?.provider,
-        hasAccount: !!account 
-      })
-      return true
+      try {
+        // PrismaAdapter handles user creation automatically
+        // Just log for debugging
+        console.log('[NextAuth signIn]', { 
+          email: user.email, 
+          provider: account?.provider,
+          hasAccount: !!account 
+        })
+        return true
+      } catch (error) {
+        console.error('[NextAuth signIn error]', error)
+        // Log detailed error information
+        if (error instanceof Error) {
+          console.error('[NextAuth signIn error details]', {
+            message: error.message,
+            stack: error.stack,
+            name: error.name,
+          })
+        }
+        // Don't block sign-in, let PrismaAdapter handle it
+        return true
+      }
     },
     async session({ session, user }) {
       try {
