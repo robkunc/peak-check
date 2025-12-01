@@ -75,6 +75,14 @@ export const authOptions: NextAuthOptions = {
         }
       } catch (error) {
         console.error('[NextAuth session error]', error)
+        // Log specific database connection errors
+        if (error instanceof Error) {
+          if (error.message.includes('ECONNREFUSED') || error.message.includes('timeout') || error.message.includes('connect')) {
+            console.error('[Database Unavailable] Database connection failed. Check if Supabase is up.')
+          } else if (error.message.includes('prepared statement')) {
+            console.error('[Database Pooler Issue] Using connection pooler instead of direct connection. Update DATABASE_URL to use port 5432.')
+          }
+        }
         // Don't fail the session, just use default role
         if (session.user) {
           session.user.role = 'LEADER'

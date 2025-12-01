@@ -8,6 +8,7 @@ const globalForPrisma = globalThis as unknown as {
 // Use Supabase's direct connection URL (port 5432) instead of the pooler (port 6543)
 export const prisma = globalForPrisma.prisma ?? new PrismaClient({
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  errorFormat: 'pretty', // Better error messages for debugging
 })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
