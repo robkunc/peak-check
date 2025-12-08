@@ -6,7 +6,7 @@ import { authOptions } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
 
 const handler = NextAuth(authOptions)
-secret: process.env.NEXTAUTH_SECRET
+secret:process.env.NEXTAUTH_SECRET
 // Force dynamic rendering and disable caching for auth routes
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
