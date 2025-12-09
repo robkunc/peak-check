@@ -68,17 +68,27 @@ export const authOptions: NextAuthOptions = {
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       try {
-        // PrismaAdapter handles user creation automatically
-        // Just log for debugging
         console.log('[NextAuth signIn]', {
           email: user.email,
           provider: account?.provider,
           hasAccount: !!account
         })
+
+        // Check if email is allowed
+        if (user.email) {
+          const allowedUser = await prisma.allowedUser.findUnique({
+            where: { email: user.email },
+          })
+
+          if (!allowedUser) {
+            console.warn(`[NextAuth] Access denied for non-whitelisted email: ${user.email}`)
+            return false // Block sign-in
+          }
+        }
+
         return true
       } catch (error) {
         console.error('[NextAuth signIn error]', error)
-        // Log detailed error information
         if (error instanceof Error) {
           console.error('[NextAuth signIn error details]', {
             message: error.message,
@@ -86,8 +96,7 @@ export const authOptions: NextAuthOptions = {
             name: error.name,
           })
         }
-        // Don't block sign-in, let PrismaAdapter handle it
-        return true
+        return false // Block sign-in on error
       }
     },
     async session({ session, user }) {
@@ -104,7 +113,6 @@ export const authOptions: NextAuthOptions = {
         }
       } catch (error) {
         console.error('[NextAuth session error]', error)
-        // Log specific database connection errors
         if (error instanceof Error) {
           if (error.message.includes('ECONNREFUSED') || error.message.includes('timeout') || error.message.includes('connect')) {
             console.error('[Database Unavailable] Database connection failed. Check if Supabase is up.')
@@ -112,7 +120,6 @@ export const authOptions: NextAuthOptions = {
             console.error('[Database Pooler Issue] Using connection pooler instead of direct connection. Update DATABASE_URL to use port 5432.')
           }
         }
-        // Don't fail the session, just use default role
         if (session.user) {
           session.user.role = 'LEADER'
         }
@@ -120,24 +127,14 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Log for debugging
       console.log('[NextAuth Redirect]', { url, baseUrl })
-
-      // If url is a relative path, make it absolute
       if (url.startsWith('/')) {
-        const redirectUrl = `${baseUrl}${url}`
-        console.log('[NextAuth Redirect] Returning:', redirectUrl)
-        return redirectUrl
+        return `${baseUrl}${url}`
       }
-      // If url is from the same origin, use it
       if (url.startsWith(baseUrl)) {
-        console.log('[NextAuth Redirect] Returning:', url)
         return url
       }
-      // Default to /peaks if no valid callback URL
-      const defaultUrl = `${baseUrl}/peaks`
-      console.log('[NextAuth Redirect] Returning default:', defaultUrl)
-      return defaultUrl
+      return `${baseUrl}/peaks`
     },
   },
   pages: {
@@ -145,12 +142,11 @@ export const authOptions: NextAuthOptions = {
     verifyRequest: '/auth/verify-request',
     error: '/auth/error',
   },
-  debug: true, // Enable debug logging to troubleshoot magic link issues
+  debug: true,
   session: {
     strategy: 'database',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60,
   },
-  // Ensure cookies work in incognito/private browsing
   useSecureCookies: process.env.NODE_ENV === 'production',
   cookies: {
     sessionToken: {
@@ -185,9 +181,6 @@ export const authOptions: NextAuthOptions = {
 
 /**
  * Email HTML body
- * Insert invisible space into domains from being turned into a hyperlink by email
- * clients like Outlook and Apple mail, as this is confusing because it seems
- * like they are supposed to click on it to sign in.
  */
 function html(params: { url: string; host: string; theme: any }) {
   const { url, host, theme } = params
@@ -235,9 +228,7 @@ function html(params: { url: string; host: string; theme: any }) {
 `
 }
 
-/** Email Text body (fallback for email clients that don't render HTML) */
+/** Email Text body */
 function text({ url, host }: { url: string; host: string }) {
   return `Sign in to ${host}\n${url}\n\n`
 }
-
-

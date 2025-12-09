@@ -28,6 +28,14 @@ model User {
   @@map("users")
 }
 
+model AllowedUser {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("allowed_users")
+}
+
 model Account {
   id                String  @id @default(uuid())
   userId            String  @map("user_id")
