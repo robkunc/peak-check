@@ -12,9 +12,10 @@ export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
 // Wrap handler with error handling
-async function wrappedHandler(req: NextRequest) {
+async function wrappedHandler(req: NextRequest, context: { params: Promise<any> }) {
   try {
-    return await handler(req)
+    const params = await context.params
+    return await handler(req, { params })
   } catch (error) {
     console.error('[NextAuth Error]', error)
     // Log the full error details
@@ -27,7 +28,7 @@ async function wrappedHandler(req: NextRequest) {
     }
     // Return a proper error response
     return NextResponse.json(
-      { 
+      {
         error: 'Authentication error',
         message: error instanceof Error ? error.message : 'Unknown error',
       },
