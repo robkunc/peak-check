@@ -4,6 +4,11 @@ import { Role } from '@prisma/client'
 
 export async function getCurrentUser() {
   const session = await getServerSession(authOptions)
+  if (!session) {
+    console.log('[Auth Debug] getCurrentUser: No session found')
+  } else {
+    // console.log('[Auth Debug] getCurrentUser: Session found for user', session.user?.email)
+  }
   return session?.user
 }
 
