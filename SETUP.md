@@ -122,14 +122,14 @@ As an admin user, you can now:
 
 ## Deployment
 
-This app is designed to be deployed on Vercel:
+This app is designed to be deployed on Render. See [RENDER-DEPLOYMENT.md](RENDER-DEPLOYMENT.md) for the full guide.
 
 1. Push your code to GitHub
-2. Connect your repository to Vercel
-3. Add all environment variables in Vercel dashboard
+2. In Render, create a new Blueprint and connect your repo (`render.yaml` configures everything)
+3. Fill in the environment variables when prompted
 4. Deploy!
 
-Make sure to set up your production database (e.g., Vercel Postgres, Railway, Supabase, or Neon).
+Make sure to set up your production database (e.g., Supabase, Render PostgreSQL, Railway, or Neon).
 
 ## Current Implementation Status
 

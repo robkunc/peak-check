@@ -2,8 +2,8 @@
 import '@/lib/suppress-deprecation-warning'
 
 import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth'
 import { NextRequest, NextResponse } from 'next/server'
+import { authOptions } from '@/lib/auth'
 
 const handler = NextAuth(authOptions)
 
@@ -38,5 +38,3 @@ async function wrappedHandler(req: NextRequest, context: { params: Promise<any> 
 }
 
 export { wrappedHandler as GET, wrappedHandler as POST }
-
-

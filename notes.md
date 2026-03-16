@@ -41,3 +41,27 @@ Follow-ups:
   - Test scraping with actual land manager and road status URLs
   - Phase 6: Optional enhancements (rule-based hints, notifications, etc.)
 
+Date: 2025-11-20 (evening)
+Tasks:
+  - Set up Supabase PostgreSQL database for production
+  - Created database schema using SQL Editor in Supabase (prisma db push was hanging)
+  - All tables created successfully: users, peaks, peak_sources, weather_snapshots, land_status_snapshots, road_status_snapshots, manual_notes
+Follow-ups:
+  - Add DATABASE_URL to Vercel environment variables
+  - Verify deployment works with Supabase connection
+  - Test authentication and data operations in production
+
+Date: 2026-03-16
+Tasks:
+  - Migrated hosting configuration from Vercel to Render
+  - Moved cache headers from vercel.json into next.config.js (platform-agnostic)
+  - Deleted vercel.json
+  - Created render.yaml blueprint with web service and 3 cron jobs (weather, land status, road status)
+  - Replaced VERCEL-DEPLOYMENT.md with RENDER-DEPLOYMENT.md (full deployment guide for Render)
+Follow-ups:
+  - Deploy to Render and verify everything works
+  - Update NEXTAUTH_URL to Render domain
+  - Update cron job URLs in render.yaml to match actual Render service URL
+  - Update Google OAuth redirect URI if using Google auth
+  - Update MIGRATION-GUIDE.md references from Vercel to Render
+

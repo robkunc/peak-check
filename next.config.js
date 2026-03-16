@@ -5,8 +5,19 @@ const nextConfig = {
       bodySizeLimit: '2mb',
     },
   },
-  // Ensure proper output for Vercel
-  output: 'standalone',
+  async headers() {
+    return [
+      {
+        source: '/api/jobs/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'no-store, max-age=0',
+          },
+        ],
+      },
+    ];
+  },
 }
 
 module.exports = nextConfig

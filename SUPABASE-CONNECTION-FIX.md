@@ -37,9 +37,9 @@ postgres://postgres.hucfrbhxbkoufycinrhx:password@aws-1-us-east-1.pooler.supabas
 postgres://postgres.hucfrbhxbkoufycinrhx:password@aws-1-us-east-1.pooler.supabase.com:5432/postgres?sslmode=require
 ```
 
-### Step 2: Update Vercel Environment Variable
+### Step 2: Update Environment Variable
 
-1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+1. Go to your hosting dashboard (Render) → Your Service → Environment
 2. Find `DATABASE_URL`
 3. Update it to use port `5432` instead of `6543`
 4. Make sure it includes `?sslmode=require` at the end
@@ -59,4 +59,6 @@ For Prisma, you **must** use the direct connection. The pooler is better for oth
 ## Alternative: Use Transaction Mode
 
 If you must use the pooler, you can configure it to use "transaction" mode instead of "session" mode, but this is more complex and the direct connection is the recommended solution.
+
+
 

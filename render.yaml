@@ -1,0 +1,89 @@
+# Render Blueprint - Peak Check (Sierra Club Peak Conditions Assistant)
+# https://render.com/docs/blueprint-spec
+
+services:
+  # Main Next.js web service
+  - type: web
+    name: peak-check
+    runtime: node
+    plan: starter # $7/mo - always on, no cold starts
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false # Set manually - your Supabase (or other) PostgreSQL connection string
+      - key: NEXTAUTH_URL
+        sync: false # Set manually - e.g. https://peak-check.onrender.com
+      - key: NEXTAUTH_SECRET
+        generateValue: true # Render auto-generates a random secret
+      - key: EMAIL_SERVER_HOST
+        sync: false
+      - key: EMAIL_SERVER_PORT
+        sync: false
+      - key: EMAIL_SERVER_USER
+        sync: false
+      - key: EMAIL_SERVER_PASSWORD
+        sync: false
+      - key: EMAIL_FROM
+        sync: false
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: FIRECRAWL_API_KEY
+        sync: false
+      - key: CRON_SECRET
+        generateValue: true
+
+  # Cron job: Refresh weather data every 3 hours
+  - type: cron
+    name: refresh-weather
+    runtime: node
+    schedule: "0 */3 * * *"
+    buildCommand: echo "no build needed"
+    startCommand: |
+      curl -s -X POST "https://peak-check.onrender.com/api/jobs/refresh-weather" \
+        -H "Authorization: Bearer $CRON_SECRET" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: CRON_SECRET
+        fromService:
+          name: peak-check
+          type: web
+          envVarKey: CRON_SECRET
+
+  # Cron job: Refresh land status every 6 hours
+  - type: cron
+    name: refresh-land-status
+    runtime: node
+    schedule: "0 */6 * * *"
+    buildCommand: echo "no build needed"
+    startCommand: |
+      curl -s -X POST "https://peak-check.onrender.com/api/jobs/refresh-land-status" \
+        -H "Authorization: Bearer $CRON_SECRET" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: CRON_SECRET
+        fromService:
+          name: peak-check
+          type: web
+          envVarKey: CRON_SECRET
+
+  # Cron job: Refresh road status every 3 hours
+  - type: cron
+    name: refresh-road-status
+    runtime: node
+    schedule: "0 */3 * * *"
+    buildCommand: echo "no build needed"
+    startCommand: |
+      curl -s -X POST "https://peak-check.onrender.com/api/jobs/refresh-road-status" \
+        -H "Authorization: Bearer $CRON_SECRET" \
+        -H "Content-Type: application/json"
+    envVars:
+      - key: CRON_SECRET
+        fromService:
+          name: peak-check
+          type: web
+          envVarKey: CRON_SECRET
