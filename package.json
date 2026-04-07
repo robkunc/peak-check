@@ -16,6 +16,10 @@
     "@auth/prisma-adapter": "^2.11.1",
     "@mendable/firecrawl-js": "^4.6.1",
     "@prisma/client": "^5.22.0",
+    "@types/node": "^20",
+    "@types/nodemailer": "^7.0.11",
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
     "autoprefixer": "^10.0.1",
     "dotenv": "^17.2.3",
     "next": "^15.5.7",
@@ -30,10 +34,6 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/nodemailer": "^7.0.11",
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "15.0.5",
     "ts-node": "^10.9.2"
