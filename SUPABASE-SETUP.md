@@ -31,11 +31,11 @@ postgresql://postgres:password@db.xxx.supabase.co:5432/postgres
 postgresql://postgres:password@db.xxx.supabase.co:5432/postgres?sslmode=require
 ```
 
-## Step 3: Add to Vercel Environment Variables
+## Step 3: Add to Render Environment Variables
 
-1. Go to Vercel Dashboard → Your Project → Settings → Environment Variables
+1. Go to Render Dashboard → Your Web Service → Environment
 2. Add `DATABASE_URL` with your Supabase connection string (including `?sslmode=require`)
-3. Make sure it's set for **All Environments** (Production, Preview, Development)
+3. Click **Save Changes** to apply
 
 ## Step 4: Deploy the Schema
 
@@ -265,9 +265,9 @@ CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 
 After the database is set up:
 
-1. ✅ Add `DATABASE_URL` to Vercel environment variables
-2. ✅ Fix `NEXTAUTH_URL` to include `https://`
-3. ✅ Redeploy on Vercel
+1. ✅ Add `DATABASE_URL` to Render environment variables
+2. ✅ Set `NEXTAUTH_URL` to your Render URL (e.g., `https://peak-check.onrender.com`)
+3. ✅ Deploy on Render
 4. ✅ Create your first admin user by signing in
 5. ✅ Update user role to ADMIN in database or via admin interface
 

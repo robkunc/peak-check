@@ -8,20 +8,20 @@
 - **NEVER** say "Go to Settings → X → Y" unless you have verified this exact path exists
 - **NEVER** say "Check the logs in the dashboard under X → Y" unless you know this location exists
 - **NEVER** reference menu items, tabs, buttons, or navigation paths you haven't verified
-- **NEVER** guess where features are located in third-party tools (Vercel, Supabase, GitHub, etc.)
+- **NEVER** guess where features are located in third-party tools (Render, Supabase, GitHub, etc.)
 - **ALWAYS** say "I don't know where that is located" or "Can you tell me where you see that?" instead
 - **ONLY** reference UI elements if you can verify them from official documentation or the user's description
 - **IF** you're about to mention a path like "Go to X → Y", STOP and ask the user instead
 
 **Examples of what NOT to say:**
-- ❌ "Check the Vercel function logs (in the Vercel dashboard under the deployment → Functions tab)"
+- ❌ "Check the Render function logs (in the Render dashboard under the deployment → Functions tab)"
 - ❌ "Go to Settings → General → Framework Preset"
 - ❌ "Navigate to Project Settings → Environment Variables"
 
 **Examples of what TO say:**
-- ✅ "I don't know where the logs are in Vercel's dashboard. Can you check the logs and share any errors you see?"
+- ✅ "I don't know where the logs are in Render's dashboard. Can you check the logs and share any errors you see?"
 - ✅ "I'm not sure where that setting is located. Can you tell me where you see it?"
-- ✅ "Please check the Vercel dashboard for any error messages and let me know what you find."
+- ✅ "Please check the Render dashboard for any error messages and let me know what you find."
 
 ## AI Assistant Behavior Guidelines
 

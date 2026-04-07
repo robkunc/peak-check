@@ -72,7 +72,7 @@ Visit `http://localhost:3000` and sign in to get started!
 - **Database**: PostgreSQL with Prisma ORM
 - **Authentication**: NextAuth.js
 - **Styling**: Tailwind CSS
-- **Deployment**: Vercel (recommended)
+- **Deployment**: Render
 
 ## 📝 Key Features
 
@@ -127,14 +127,14 @@ npm run db:studio  # Open Prisma Studio GUI
 
 ## 📦 Deployment
 
-Designed for Vercel deployment:
+Designed for Render deployment:
 
 1. Push code to GitHub
-2. Import project in Vercel
-3. Set environment variables
-4. Deploy!
+2. Connect repository to Render
+3. Deploy using the `render.yaml` blueprint
+4. Set environment variables in Render dashboard
 
-For cron jobs (weather/status refresh), use Vercel Cron or an external service.
+Cron jobs for weather/status refresh are automatically configured in `render.yaml`.
 
 ## 🤝 Contributing
 

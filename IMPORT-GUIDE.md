@@ -79,7 +79,7 @@ curl -X POST http://localhost:3001/api/jobs/refresh-road-status \
 ```
 
 ### Option C: Automatic (Production)
-Once deployed to Vercel, the cron jobs in `vercel.json` will run automatically:
+Once deployed to Render, the cron jobs in `render.yaml` will run automatically:
 - Weather: Every 3 hours
 - Land Status: Every 6 hours
 - Road Status: Every 3 hours

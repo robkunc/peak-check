@@ -37,7 +37,7 @@ Tasks:
   - Created manual refresh triggers for weather, land status, and road status jobs
   - Added error handling, status indicators, and user feedback modals throughout admin UI
 Follow-ups:
-  - Set up cron jobs for automated scraping (Vercel cron or external scheduler)
+  - Set up cron jobs for automated scraping (Render cron or external scheduler)
   - Test scraping with actual land manager and road status URLs
   - Phase 6: Optional enhancements (rule-based hints, notifications, etc.)
 
@@ -47,7 +47,7 @@ Tasks:
   - Created database schema using SQL Editor in Supabase (prisma db push was hanging)
   - All tables created successfully: users, peaks, peak_sources, weather_snapshots, land_status_snapshots, road_status_snapshots, manual_notes
 Follow-ups:
-  - Add DATABASE_URL to Vercel environment variables
+  - Add DATABASE_URL to Render environment variables
   - Verify deployment works with Supabase connection
   - Test authentication and data operations in production
 

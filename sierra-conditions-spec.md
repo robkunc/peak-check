@@ -169,7 +169,7 @@ Admins SHALL be able to view the last ingestion status (e.g., last Firecrawl cal
 - **Database:** Postgres (via Prisma) or MongoDB (via Mongoose). This spec assumes Prisma/Postgres, but can be adapted.
 - **Auth:** NextAuth or similar; use low-friction login (e.g., email link, or Google/Microsoft if aligned with Sierra Club usage).
 - **AI Scraping:** Firecrawl (or comparable AI-based scraping API) for structured extraction from arbitrary URLs.
-- **Deployment:** Vercel (for the Next.js app) + scheduled jobs (Vercel Cron) or an external worker for background tasks.
+- **Deployment:** Render (for the Next.js app) with built-in Cron Jobs for background tasks.
 
 ---
 

@@ -55,7 +55,7 @@ However, you should set:
 
 ### Cron Schedule
 
-Configured in `vercel.json`:
+Configured in `render.yaml`:
 - Runs every 3 hours: `0 */3 * * *`
 
 For local development, you can trigger manually or set up a local cron.
