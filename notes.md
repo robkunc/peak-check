@@ -65,3 +65,17 @@ Follow-ups:
   - Update Google OAuth redirect URI if using Google auth
   - Update MIGRATION-GUIDE.md references from Vercel to Render
 
+Date: 2026-04-07
+Tasks:
+  - Completed full migration from Vercel to Render hosting
+  - Removed all Vercel-specific files (.vercel directory, .vercelignore)
+  - Updated all documentation to reference Render instead of Vercel (README, SUPABASE-SETUP, IMPORT-GUIDE, WEATHER-INTEGRATION, sierra-conditions-spec)
+  - Verified build passes cleanly with zero errors
+  - Transferred repository ownership to robkunc/peak-check
+  - Pulled latest changes from new remote and resolved merge conflicts
+  - Pushed all Render migration changes to robkunc/peak-check repository
+Follow-ups:
+  - Deploy to Render using render.yaml blueprint
+  - Set environment variables in Render dashboard (DATABASE_URL, NEXTAUTH_URL, NEXTAUTH_SECRET, CRON_SECRET, email/auth credentials)
+  - Verify all cron jobs run successfully on Render
+
