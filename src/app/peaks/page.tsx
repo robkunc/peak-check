@@ -9,7 +9,7 @@ export const revalidate = 0
 
 export default async function PeaksPage() {
   const user = await getCurrentUser()
-  
+
   if (!user) {
     redirect('/auth/signin')
   }
